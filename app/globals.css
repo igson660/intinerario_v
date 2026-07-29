@@ -1,0 +1,118 @@
+/* Atlas Cívico: base editorial cívica, marfim-papel, verde-seringueira e tipografia de relatório. */
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ink: #17324d;
+  --paper: #fffdf8;
+  --canvas: #f4f0e7;
+  --rubber: #176b57;
+  --rubber-dark: #0d4b3d;
+  --clay: #c9823b;
+  --sage: #b9ccbf;
+  --line: #d9d5ca;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--canvas);
+  color-scheme: light;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(23, 107, 87, 0.06), transparent 28rem),
+    var(--canvas);
+  color: var(--ink);
+  font-family: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: rgba(23, 107, 87, 0.2);
+  color: var(--rubber-dark);
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  transition-duration: 180ms;
+  transition-timing-function: var(--ease-out);
+}
+
+button:active:not(:disabled),
+[role="button"]:active:not([aria-disabled="true"]) {
+  transform: scale(0.97);
+}
+
+:focus-visible {
+  outline: 3px solid rgba(23, 107, 87, 0.28);
+  outline-offset: 2px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background: rgba(23, 50, 77, 0.25);
+  background-clip: padding-box;
+}
+
+@layer components {
+  .sheet {
+    @apply rounded-sheet bg-paper shadow-sheet;
+  }
+
+  .eyebrow {
+    @apply font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-rubber;
+  }
+
+  .metric-number {
+    font-family: "Fraunces", Georgia, serif;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .mono-value {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cartographic-grid {
+    background-image:
+      linear-gradient(rgba(23, 50, 77, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(23, 50, 77, 0.035) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
