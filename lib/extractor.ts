@@ -12,7 +12,7 @@ export function extractPayment(line: string, nextLine = ""): Pagamento | null {
   if (!match) return null;
 
   const parts = match[4].trim().split(/\s+/);
-  const accountIndex = parts.indexOf("2717212155");
+  const accountIndex = parts.findIndex((part) => part === "2717212155" || part === "2717212161");
   const values = line.match(/\d+(?:\.\d{3})*,\d{2}/g) ?? [];
   const reference = nextLine.match(/EMPENHO:\s*(\d{10}\/\d{4})/i);
 
@@ -24,7 +24,7 @@ export function extractPayment(line: string, nextLine = ""): Pagamento | null {
       reference?.[1] ?? (accountIndex >= 0 ? (parts[accountIndex + 3] ?? "") : ""),
     contaFinanceira: accountIndex >= 0 ? parts[accountIndex] : "",
     despesa: line.match(/\b3390180000\b/)?.[0] ?? "",
-    fonte: line.match(/\b15010700\b/)?.[0] ?? "",
+    fonte: line.match(/\b(?:15010700|25010700)\b/)?.[0] ?? "",
     valor: values.length
       ? Number(values.at(-1)!.replaceAll(".", "").replace(",", "."))
       : 0,

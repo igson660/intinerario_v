@@ -1,0 +1,41 @@
+{
+  "status": "passou",
+  "grupos": 3826,
+  "pagamentos": 6203,
+  "cpfsUnicosComValor": 2572,
+  "identificadoresDeRotaUnicos": 3826,
+  "notasDePagamentoUnicas": 6203,
+  "totalCalculado": 3479800,
+  "totalMetadados": 3479800,
+  "quantidadeMetadados": 6203,
+  "paginas": 1133,
+  "porAno": {
+    "2023": {
+      "count": 399,
+      "total": 88610
+    },
+    "2024": {
+      "count": 2900,
+      "total": 1221082
+    },
+    "2025": {
+      "count": 2551,
+      "total": 1856994
+    },
+    "2026": {
+      "count": 353,
+      "total": 313114
+    }
+  },
+  "cursosDistintos": 709,
+  "identidadesIncompletas": 4,
+  "menorPagamento": 6,
+  "maiorPagamento": 2898,
+  "issues": [],
+  "warnings": [
+    "Identidade incompleta: nome ausente / CPF ausente.",
+    "Identidade incompleta: nome ausente / CPF ausente.",
+    "Identidade incompleta: nome ausente / CPF ausente.",
+    "Identidade incompleta: nome ausente / CPF ausente."
+  ]
+}

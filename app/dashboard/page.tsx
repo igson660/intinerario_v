@@ -29,9 +29,10 @@ import {
 } from "lucide-react";
 
 export default function DashboardPage() {
-  const { stats, records, filteredRecords, sourceLabel } = useData();
+  const { stats, records, filteredRecords, sourceLabel, filters } = useData();
   const isFiltered = filteredRecords.length !== records.length;
   const totalMatches = Math.abs(stats.totalRecursos - baseMetadata.totalRelatorio) < 0.001 && !isFiltered;
+  const yearLabel = filters.ano === "todos" ? `Exercícios ${baseMetadata.anos[0]}–${baseMetadata.anos[baseMetadata.anos.length - 1]}` : `Exercício ${filters.ano}`;
 
   const kpis = [
     {
@@ -124,7 +125,7 @@ export default function DashboardPage() {
           <div>
             <div className="flex flex-wrap items-center gap-2">
               <span className="rounded-full bg-rubber/10 px-3 py-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-rubber">
-                SICAF · Exercício 2023
+                SICAF · {yearLabel}
               </span>
               <span className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.1em] ${
                 totalMatches ? "bg-[#DCEBE4] text-rubber-dark" : "bg-clay/10 text-clay"
@@ -214,7 +215,7 @@ export default function DashboardPage() {
                 Do relatório extenso a uma leitura verificável.
               </h2>
               <p className="mt-4 max-w-md text-sm leading-7 text-ink/58">
-                Os dados são consolidados por CPF, os cursos são normalizados e cada pagamento preserva nota, liquidação, empenho, conta, despesa e fonte.
+                A visão padrão reúne os exercícios de 2023 a 2026; use o filtro de ano para analisar um exercício específico. Os dados são consolidados por CPF e processo SEI quando disponíveis.
               </p>
             </div>
             <div className="mt-8 grid max-w-md grid-cols-2 gap-3">
@@ -226,7 +227,7 @@ export default function DashboardPage() {
               <div className="rounded-xl border border-line bg-paper/85 p-4 backdrop-blur-sm">
                 <FileCheck2 className="h-5 w-5 text-clay" />
                 <p className="mt-3 font-mono text-[9px] uppercase tracking-[0.12em] text-ink/45">Data de geração</p>
-                <p className="metric-number mt-1 text-2xl font-bold text-ink">20.07.26</p>
+                <p className="metric-number mt-1 text-2xl font-bold text-ink">{baseMetadata.dataGeracao.replaceAll("/", ".")}</p>
               </div>
             </div>
           </div>

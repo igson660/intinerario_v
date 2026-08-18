@@ -3,6 +3,7 @@
 
 import { useData } from "@/contexts/DataContext";
 import { formatCpf, formatCurrency, formatNumber } from "@/lib/formatters";
+import { findRecordBySlug } from "@/lib/recordIdentity";
 import type { Pagamento } from "@/lib/types";
 import {
   ArrowLeft,
@@ -20,9 +21,9 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 
-export function BeneficiaryDetail({ cpf }: { cpf: string }) {
+export function BeneficiaryDetail({ slug }: { slug: string }) {
   const { records } = useData();
-  const beneficiary = records.find((record) => record.cpf === cpf);
+  const beneficiary = findRecordBySlug(records, slug);
 
   if (!beneficiary) {
     return (
@@ -35,7 +36,7 @@ export function BeneficiaryDetail({ cpf }: { cpf: string }) {
           />
           <h1 className="mt-5 font-serif text-3xl font-bold text-ink">Beneficiário não encontrado</h1>
           <p className="mt-2 text-sm leading-6 text-ink/50">
-            Este CPF não está presente na base actualmente carregada.
+            Este identificador não está presente na base actualmente carregada.
           </p>
           <Link href="/pesquisa" className="mt-6 inline-flex h-11 items-center gap-2 rounded-xl bg-rubber px-5 text-xs font-bold text-white hover:bg-rubber-dark">
             <Search className="h-4 w-4" />
@@ -73,9 +74,9 @@ export function BeneficiaryDetail({ cpf }: { cpf: string }) {
               Beneficiário
             </p>
             <h1 className="mt-2 max-w-2xl font-serif text-[35px] font-bold leading-[1.08] tracking-[-0.025em] text-ink sm:text-[48px]">
-              {beneficiary.nome}
+              {beneficiary.nome || "Beneficiário sem identificação"}
             </h1>
-            <p className="mono-value mt-3 text-sm text-rubber">{formatCpf(beneficiary.cpf)}</p>
+            <p className="mono-value mt-3 text-sm text-rubber">{beneficiary.cpf ? formatCpf(beneficiary.cpf) : "CPF não informado"}</p>
           </div>
           <div className="mt-7 flex flex-wrap items-end gap-x-8 gap-y-4">
             <div>
@@ -99,7 +100,7 @@ export function BeneficiaryDetail({ cpf }: { cpf: string }) {
           </div>
         </div>
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <DetailCard icon={<Clipboard className="h-4 w-4" />} label="CPF" value={formatCpf(beneficiary.cpf)} copyValue={formatCpf(beneficiary.cpf)} />
+          <DetailCard icon={<Clipboard className="h-4 w-4" />} label="CPF" value={beneficiary.cpf ? formatCpf(beneficiary.cpf) : "Não informado"} copyValue={beneficiary.cpf ? formatCpf(beneficiary.cpf) : undefined} />
           <DetailCard icon={<GraduationCap className="h-4 w-4" />} label="Curso" value={beneficiary.curso} />
           <DetailCard icon={<FileKey2 className="h-4 w-4" />} label="Processo SEI" value={beneficiary.processoSei || "Não informado"} copyValue={beneficiary.processoSei} />
           <DetailCard icon={<ReceiptText className="h-4 w-4" />} label="Pagamentos" value={formatNumber(beneficiary.quantidadePagamentos)} />

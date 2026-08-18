@@ -1,0 +1,24 @@
+{
+  "files": [
+    {
+      "file": "/home/ubuntu/upload/relatorio_2025.txt",
+      "source": "2025-principal",
+      "physical_pages": 1,
+      "row_lines_detected": 2551,
+      "records_emitted": 2551,
+      "report_total": 1856994.0,
+      "sum_records": 1856994.0
+    },
+    {
+      "file": "/home/ubuntu/upload/relatorio_2026_superavit.txt",
+      "source": "2026-superavit",
+      "physical_pages": 1,
+      "row_lines_detected": 353,
+      "records_emitted": 353,
+      "report_total": 313114.0,
+      "sum_records": 313114.0
+    }
+  ],
+  "total_records": 2904,
+  "total_sum": 2170108.0
+}

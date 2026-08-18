@@ -3,7 +3,7 @@
 
 import { useData } from "@/contexts/DataContext";
 import { hasActiveFilters } from "@/lib/filters";
-import { formatCurrency } from "@/lib/formatters";
+import { formatCurrency, formatNumber } from "@/lib/formatters";
 import { ChevronDown, Filter, RotateCcw, Search, SlidersHorizontal } from "lucide-react";
 import { useMemo, useState } from "react";
 
@@ -11,7 +11,7 @@ const selectClass =
   "h-11 w-full appearance-none rounded-xl border border-line bg-white px-3 pr-9 text-xs font-semibold text-ink shadow-sm outline-none hover:border-rubber focus:border-rubber";
 
 export function Filters() {
-  const { filters, options, setFilters, clearFilters, filteredRecords } = useData();
+  const { filters, options, setFilters, clearFilters, filteredRecords, records } = useData();
   const [expanded, setExpanded] = useState(true);
   const maximum = options.valorMaximo || 0;
   const currentMax = Number.isFinite(filters.valorMaximo) ? filters.valorMaximo : maximum;
@@ -50,7 +50,7 @@ export function Filters() {
           <span className="mt-0.5 block text-[11px] text-ink/45">
             {active
               ? `${activeCount} ${activeCount === 1 ? "filtro activo" : "filtros activos"} · ${filteredRecords.length} beneficiários`
-              : "Todos os 399 registos do relatório"}
+              : `Todos os ${formatNumber(records.length)} registos do relatório`}
           </span>
         </span>
         {active && (

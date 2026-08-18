@@ -6,9 +6,9 @@ Aplicação web interactiva para análise de pagamentos de bolsas de assistênci
 
 - **Dashboard BI**: 9 gráficos interactivos com Recharts
 - **Pesquisa Avançada**: Filtros globais (beneficiário, ano, curso, conta, despesa, fonte, faixa de valor)
-- **Perfis Individuais**: 399 páginas de beneficiários com histórico completo de pagamentos
+- **Perfis Individuais**: 3.826 páginas de grupos beneficiário/processo com histórico completo de pagamentos
 - **Importação de Dados**: Suporte a texto SICAF com parsing local no navegador
-- **Exportação Estática**: 403 páginas HTML pré-renderizadas para hospedagem simples
+- **Exportação Estática**: páginas HTML pré-renderizadas para hospedagem simples
 - **Responsivo**: Design adaptado para desktop, tablet e mobile
 - **Tipagem Completa**: TypeScript com validação de tipos em toda a aplicação
 
@@ -71,7 +71,7 @@ bolsa-estudantil-dashboard/
 │   ├── formatters.ts        # Formatadores (moeda, data)
 │   └── ...
 ├── data/                    # Base de dados estática
-│   └── base.ts              # 399 beneficiários (SICAF 2023)
+│   └── base.ts              # 3.826 grupos beneficiário/processo (SICAF 2023–2026)
 ├── scripts/                 # Scripts utilitários
 │   └── verify-data.mjs      # Validação de integridade
 ├── package.json             # Dependências e scripts
@@ -106,12 +106,14 @@ Nenhuma variável de ambiente é necessária para a aplicação funcionar localm
 
 ## 📊 Dados
 
-A aplicação inclui a base completa do **Relatório SICAF 2023** com:
-- **399 beneficiários** únicos
-- **399 pagamentos** (um por beneficiário)
-- **Total**: R$ 88.610,00
-- **11 cursos** distintos
-- **Período**: 01/01/2023 a 31/12/2023
+A aplicação inclui a base consolidada dos **Relatórios SICAF do Itinerário Formativo 2023 — exercícios 2023 a 2026** com:
+- **3.826 grupos beneficiário/processo**
+- **6.203 pagamentos**
+- **Total**: R$ 3.479.800,00
+- **Período**: 26/12/2023 a 20/07/2026
+- **1.133 páginas de origem**: 86 de 2023, 556 de 2024, 424 de 2025 e 67 de 2026
+
+A visão padrão do dashboard mostra todos os exercícios. O filtro global de ano permite selecionar 2023, 2024, 2025 ou 2026, recalculando indicadores, gráficos e resultados da pesquisa.
 
 ### Validação de Dados
 
@@ -124,10 +126,11 @@ Resultado esperado:
 ```json
 {
   "status": "passou",
-  "beneficiarios": 399,
-  "pagamentos": 399,
-  "cpfsUnicos": 399,
-  "totalCalculado": 88610,
+  "grupos": 3826,
+  "pagamentos": 6203,
+  "identificadoresDeRotaUnicos": 3826,
+  "notasDePagamentoUnicas": 6203,
+  "totalCalculado": 3479800,
   "issues": []
 }
 ```
@@ -225,4 +228,4 @@ Para questões ou sugestões, contacte o desenvolvedor.
 
 **Versão**: 1.0.0  
 **Data de Geração**: 20/07/2026  
-**Fonte de Dados**: SICAF — Relação de Pagamentos por Credor e Data de Baixa (86 páginas)
+**Fonte de Dados**: SICAF — Relação de Pagamentos por Credor e Data de Baixa (1.133 páginas, exercícios 2023–2026)

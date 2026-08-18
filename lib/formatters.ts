@@ -20,7 +20,9 @@ export function formatNumber(value: number): string {
 }
 
 export function formatCpf(cpf: string): string {
-  const digits = cpf.replace(/\D/g, "").padStart(11, "0").slice(-11);
+  const rawDigits = (cpf || "").replace(/\D/g, "");
+  if (!rawDigits) return "Não informado";
+  const digits = rawDigits.padStart(11, "0").slice(-11);
   return digits.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
 }
 

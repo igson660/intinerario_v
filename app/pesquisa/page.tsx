@@ -3,6 +3,7 @@
 
 import { useData } from "@/contexts/DataContext";
 import { formatCpf, formatCurrency, formatNumber, normalizeText } from "@/lib/formatters";
+import { recordSlug } from "@/lib/recordIdentity";
 import type { Beneficiario } from "@/lib/types";
 import {
   ArrowDownAZ,
@@ -74,7 +75,7 @@ export default function SearchPage() {
             Encontre um beneficiário pelo nome ou CPF.
           </h1>
           <p className="mt-3 max-w-2xl text-sm leading-7 text-ink/58">
-            Consulte o curso, o processo SEI e o histórico financeiro preservado para cada pessoa no relatório de 2023.
+            Consulte o curso, o processo SEI e o histórico financeiro preservado para cada grupo nos relatórios de 2023 a 2026.
           </p>
 
           <label className="relative mt-7 block max-w-2xl">
@@ -174,13 +175,13 @@ export default function SearchPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-line">
-                  {visible.map((record) => <DesktopRow key={record.cpf} record={record} />)}
+                  {visible.map((record) => <DesktopRow key={recordSlug(record)} record={record} />)}
                 </tbody>
               </table>
             </div>
 
             <div className="divide-y divide-line md:hidden">
-              {visible.map((record) => <MobileResult key={record.cpf} record={record} />)}
+              {visible.map((record) => <MobileResult key={recordSlug(record)} record={record} />)}
             </div>
 
             <footer className="flex flex-col gap-3 border-t border-line bg-canvas/35 px-4 py-4 sm:flex-row sm:items-center sm:px-6">
@@ -255,7 +256,7 @@ function DesktopRow({ record }: { record: Beneficiario }) {
   return (
     <tr className="group hover:bg-rubber/[0.035]">
       <td className="max-w-[270px] px-5 py-4">
-        <Link href={`/beneficiario/${record.cpf}`} className="block truncate text-xs font-extrabold text-ink group-hover:text-rubber">
+        <Link href={`/beneficiario/${recordSlug(record)}`} className="block truncate text-xs font-extrabold text-ink group-hover:text-rubber">
           {record.nome}
         </Link>
       </td>
@@ -268,7 +269,7 @@ function DesktopRow({ record }: { record: Beneficiario }) {
       <td className="whitespace-nowrap px-5 py-4 font-mono text-[10px] font-semibold text-rubber">{formatCurrency(record.valorTotalRecebido)}</td>
       <td className="px-5 py-4 text-right">
         <Link
-          href={`/beneficiario/${record.cpf}`}
+          href={`/beneficiario/${recordSlug(record)}`}
           className="inline-grid h-9 w-9 place-items-center rounded-xl border border-line bg-paper text-ink/45 group-hover:border-rubber group-hover:text-rubber"
           aria-label={`Ver detalhes de ${record.nome}`}
         >
@@ -281,7 +282,7 @@ function DesktopRow({ record }: { record: Beneficiario }) {
 
 function MobileResult({ record }: { record: Beneficiario }) {
   return (
-    <Link href={`/beneficiario/${record.cpf}`} className="block p-5 hover:bg-rubber/[0.035]">
+    <Link href={`/beneficiario/${recordSlug(record)}`} className="block p-5 hover:bg-rubber/[0.035]">
       <div className="flex items-start gap-3">
         <div className="min-w-0 flex-1">
           <h3 className="text-sm font-extrabold leading-5 text-ink">{record.nome}</h3>

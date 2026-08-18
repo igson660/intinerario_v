@@ -1,0 +1,82 @@
+{
+  "entrada_registros": 6203,
+  "registros_unicos": 6203,
+  "duplicacoes_exatas_removidas": 0,
+  "duplicacoes_exatas": [],
+  "grupos_beneficiarios_processos": 3826,
+  "total_consolidado": 3479800.0,
+  "por_fonte": {
+    "2023-modelo": {
+      "count": 399,
+      "sum": 88610.0
+    },
+    "2024-consolidado": {
+      "count": 2900,
+      "sum": 1221082.0
+    },
+    "2025-principal": {
+      "count": 2551,
+      "sum": 1856994.0
+    },
+    "2026-superavit": {
+      "count": 353,
+      "sum": 313114.0
+    }
+  },
+  "por_ano": {
+    "2023": {
+      "count": 399,
+      "sum": 88610.0
+    },
+    "2024": {
+      "count": 2900,
+      "sum": 1221082.0
+    },
+    "2025": {
+      "count": 2551,
+      "sum": 1856994.0
+    },
+    "2026": {
+      "count": 353,
+      "sum": 313114.0
+    }
+  },
+  "grupos_com_pagamentos_multiplos": 1650,
+  "grupos_com_identidade_incompleta": 4,
+  "identidade_incompleta": [
+    {
+      "nome": "",
+      "cpf": "",
+      "processoSei": "",
+      "curso": "Curso não identificado",
+      "quantidadePagamentos": 1
+    },
+    {
+      "nome": "",
+      "cpf": "",
+      "processoSei": "2817.013032.00751/2023-90",
+      "curso": "Auxiliar de Laboratorio de Saúde",
+      "quantidadePagamentos": 1
+    },
+    {
+      "nome": "",
+      "cpf": "",
+      "processoSei": "2817.013048.00087/2023-73",
+      "curso": "Técnico em Enfermagem",
+      "quantidadePagamentos": 1
+    },
+    {
+      "nome": "",
+      "cpf": "",
+      "processoSei": "2817.013048.00087/2023-73",
+      "curso": "Técnico em Enfermagem",
+      "quantidadePagamentos": 1
+    }
+  ],
+  "grupos_com_curso_nao_identificado": 1397,
+  "validacao": {
+    "soma_grupos_igual_entrada_unica": true,
+    "quantidade_pagamentos_igual_entrada_unica": true,
+    "notas_pagamento_unicas": true
+  }
+}

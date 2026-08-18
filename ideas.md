@@ -77,7 +77,7 @@ Exemplos:
 
 ### Wordmark e logótipo
 
-O símbolo combina uma **folha dobrada de relatório** com duas curvas topográficas e um ponto de beneficiário. O wordmark “Bolsa Clara” utiliza lettering personalizado de terminais cortados; nunca deve ser apresentado como simples texto numa fonte padrão.
+O símbolo combina uma **folha dobrada de relatório** com duas curvas topográficas e um ponto de beneficiário. O wordmark “Bolsa” utiliza lettering personalizado de terminais cortados; nunca deve ser apresentado como simples texto numa fonte padrão.
 
 ### Cor própria da marca
 
@@ -89,6 +89,6 @@ Apesar de o ambiente inicial fornecer uma aplicação React genérica, o project
 
 ## Decisões de estilo
 
-- A moldura global deve manter a identidade **Bolsa Clara** visível: símbolo de folha/topografia, wordmark próprio, faixa verde activa e marcador persistente de fonte/período.
+- A moldura global deve manter a identidade **Bolsa** visível: símbolo de folha/topografia, wordmark próprio, faixa verde activa e marcador persistente de fonte/período.
 - A regra de composição é **folha de análise editorial, não grelha de cartões iguais**: cada página combina um módulo dominante, uma faixa métrica compacta e uma secção de livro-caixa/tabela em escalas distintas.
 - Gráficos com apenas uma categoria ou período mudam para um **tratamento de relatório anotado**, com concentração, valor, quantidade e nota de leitura, evitando áreas visualmente vazias.

@@ -2,8 +2,8 @@
 
 - [ ] Confirmar que o servidor de desenvolvimento inicia e responde sem erros fatais.
 - [ ] Executar verificação TypeScript e build de produção isolado.
-- [ ] Confirmar a exportação estática da página inicial, dashboard, pesquisa, 404 e 399 perfis.
-- [ ] Conferir a integridade da base: 399 beneficiários, 399 pagamentos e R$ 88.610,00.
+- [ ] Confirmar a exportação estática da página inicial, dashboard, pesquisa, 404 e 3.826 perfis.
+- [ ] Conferir a integridade da base: 3.826 grupos, 6.203 pagamentos e R$ 3.479.800,00.
 - [ ] Validar navegação pela sidebar, cabeçalho, retorno à pesquisa e abertura de perfis.
 - [ ] Testar filtros globais por beneficiário, ano, curso, conta, despesa, fonte e faixa de valor.
 - [ ] Testar limpeza dos filtros e actualização coerente dos indicadores e gráficos.

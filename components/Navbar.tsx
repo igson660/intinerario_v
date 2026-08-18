@@ -12,8 +12,10 @@ interface NavbarProps {
 }
 
 function pageContext(pathname: string) {
-  if (pathname.startsWith("/pesquisa")) return ["Consulta", "Pesquisa de beneficiários"];
-  if (pathname.startsWith("/beneficiario")) return ["Consulta", "Perfil do beneficiário"];
+  if (pathname.startsWith("/pesquisa"))
+    return ["Consulta", "Pesquisa de beneficiários"];
+  if (pathname.startsWith("/beneficiario"))
+    return ["Consulta", "Perfil do beneficiário"];
   return ["Análise", "Visão geral"];
 }
 
@@ -34,12 +36,20 @@ export function Navbar({ onOpenMenu, onOpenImport }: NavbarProps) {
           <Menu className="h-5 w-5" />
         </button>
 
-        <Link href="/dashboard" className="flex shrink-0 items-center gap-2 lg:hidden" aria-label="Bolsa Clara — visão geral">
+        <Link
+          href="/dashboard"
+          className="flex shrink-0 items-center gap-2 lg:hidden"
+          aria-label="Bolsa — visão geral"
+        >
           <span className="grid h-9 w-9 place-items-center overflow-hidden rounded-xl border border-line bg-paper shadow-sm">
-            <img src="/manus-storage/bolsa-clara-logo-v2_3f7cd8ad.png" alt="" className="h-8 w-8 object-contain" />
+            <img
+              src="/manus-storage/bolsa-clara-logo-v2_3f7cd8ad.png"
+              alt=""
+              className="h-8 w-8 object-contain"
+            />
           </span>
           <span className="font-serif text-sm font-bold tracking-[-0.025em] text-ink sm:text-base">
-            Bolsa <span className="text-rubber">Clara</span>
+            Bolsa
           </span>
         </Link>
 
@@ -47,7 +57,9 @@ export function Navbar({ onOpenMenu, onOpenImport }: NavbarProps) {
           <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-rubber">
             {section}
           </p>
-          <h2 className="truncate text-sm font-bold text-ink sm:text-base">{page}</h2>
+          <h2 className="truncate text-sm font-bold text-ink sm:text-base">
+            {page}
+          </h2>
         </div>
 
         <div className="ml-auto flex min-w-0 items-center gap-2 sm:gap-3">

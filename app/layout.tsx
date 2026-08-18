@@ -7,17 +7,19 @@ import { AppShell } from "@/components/AppShell";
 
 export const metadata: Metadata = {
   title: {
-    default: "Bolsa Clara | Painel de Assistência Estudantil",
-    template: "%s | Bolsa Clara",
+    default: "Bolsa | Painel de Assistência Estudantil",
+    template: "%s | Bolsa",
   },
   description:
-    "Consulta e análise dos pagamentos de assistência estudantil do relatório SICAF de 2023.",
+    "Consulta e análise dos pagamentos de assistência estudantil dos relatórios SICAF de 2023 a 2026.",
   icons: {
     icon: "/manus-storage/bolsa-clara-logo-v2_3f7cd8ad.png",
   },
 };
 
-export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
+export default function RootLayout({
+  children,
+}: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="pt-BR">
       <body>

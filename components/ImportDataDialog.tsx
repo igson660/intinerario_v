@@ -143,7 +143,7 @@ export function ImportDataDialog({ open, onOpenChange }: ImportDataDialogProps) 
                   restoreOriginal();
                   setRaw("");
                   setFileName("");
-                  setMessage({ type: "success", text: "A base original de 2023 foi restaurada." });
+                  setMessage({ type: "success", text: "A base original de 2023 a 2026 foi restaurada." });
                 }}
                 className="flex h-11 items-center justify-center gap-2 rounded-xl border border-line px-4 text-xs font-bold text-ink hover:border-clay hover:text-clay sm:mr-auto"
               >

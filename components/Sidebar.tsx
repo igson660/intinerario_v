@@ -44,7 +44,9 @@ export function Sidebar({
         aria-label="Fechar menu"
         onClick={onCloseMobile}
         className={`fixed inset-0 z-40 bg-ink/35 backdrop-blur-sm transition-opacity lg:hidden ${
-          mobileOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
+          mobileOpen
+            ? "pointer-events-auto opacity-100"
+            : "pointer-events-none opacity-0"
         }`}
       />
 
@@ -58,13 +60,15 @@ export function Sidebar({
           <div className="grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-xl bg-white/95 shadow-sm">
             <img
               src="/manus-storage/bolsa-clara-logo-v2_3f7cd8ad.png"
-              alt="Símbolo Bolsa Clara"
+              alt="Símbolo Bolsa"
               className="h-9 w-9 object-contain"
             />
           </div>
-          <div className={`min-w-0 transition-opacity ${collapsed ? "lg:hidden" : "block"}`}>
+          <div
+            className={`min-w-0 transition-opacity ${collapsed ? "lg:hidden" : "block"}`}
+          >
             <p className="font-serif text-lg font-bold leading-none tracking-[-0.025em]">
-              Bolsa <span className="text-[#78D5B6]">Clara</span>
+              Bolsa
             </p>
             <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.14em] text-white/50">
               Assistência estudantil
@@ -82,11 +86,14 @@ export function Sidebar({
 
         <Tooltip.Provider delayDuration={150}>
           <nav className="flex-1 space-y-2 px-3 py-6">
-            <p className={`px-3 pb-2 font-mono text-[9px] uppercase tracking-[0.18em] text-white/35 ${collapsed ? "lg:hidden" : ""}`}>
+            <p
+              className={`px-3 pb-2 font-mono text-[9px] uppercase tracking-[0.18em] text-white/35 ${collapsed ? "lg:hidden" : ""}`}
+            >
               Análise
             </p>
-            {navItems.map((item) => {
-              const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
+            {navItems.map(item => {
+              const active =
+                pathname === item.href || pathname.startsWith(`${item.href}/`);
               const Icon = item.icon;
               const link = (
                 <Link
@@ -105,8 +112,12 @@ export function Sidebar({
                       active ? "bg-[#4FC19C]" : "bg-transparent"
                     }`}
                   />
-                  <Icon className={`h-5 w-5 shrink-0 ${active ? "text-rubber" : ""}`} />
-                  <span className={collapsed ? "lg:hidden" : ""}>{item.label}</span>
+                  <Icon
+                    className={`h-5 w-5 shrink-0 ${active ? "text-rubber" : ""}`}
+                  />
+                  <span className={collapsed ? "lg:hidden" : ""}>
+                    {item.label}
+                  </span>
                 </Link>
               );
 
@@ -139,7 +150,9 @@ export function Sidebar({
                   className="flex h-12 w-full items-center gap-3 rounded-xl px-3 text-sm font-semibold text-white/68 hover:bg-white/8 hover:text-white"
                 >
                   <FileInput className="h-5 w-5 shrink-0" />
-                  <span className={collapsed ? "lg:hidden" : ""}>Importar base</span>
+                  <span className={collapsed ? "lg:hidden" : ""}>
+                    Importar base
+                  </span>
                 </button>
               </Tooltip.Trigger>
               {collapsed && (
@@ -159,14 +172,20 @@ export function Sidebar({
         </Tooltip.Provider>
 
         <div className="border-t border-white/10 p-4">
-          <div className={`rounded-xl bg-white/[0.06] p-3 ${collapsed ? "lg:grid lg:place-items-center" : ""}`}>
+          <div
+            className={`rounded-xl bg-white/[0.06] p-3 ${collapsed ? "lg:grid lg:place-items-center" : ""}`}
+          >
             <div className="flex items-center gap-2">
               <ShieldCheck className="h-4 w-4 shrink-0 text-[#78D5B6]" />
-              <span className={`font-mono text-[9px] uppercase tracking-[0.12em] text-white/55 ${collapsed ? "lg:hidden" : ""}`}>
+              <span
+                className={`font-mono text-[9px] uppercase tracking-[0.12em] text-white/55 ${collapsed ? "lg:hidden" : ""}`}
+              >
                 Processamento local
               </span>
             </div>
-            <p className={`mt-2 text-[11px] leading-5 text-white/42 ${collapsed ? "lg:hidden" : ""}`}>
+            <p
+              className={`mt-2 text-[11px] leading-5 text-white/42 ${collapsed ? "lg:hidden" : ""}`}
+            >
               Nenhum dado é enviado para servidores externos.
             </p>
           </div>
@@ -178,7 +197,11 @@ export function Sidebar({
           aria-label={collapsed ? "Expandir menu" : "Recolher menu"}
           className="absolute -right-4 top-28 hidden h-8 w-8 place-items-center rounded-full border border-line bg-paper text-ink shadow-sheet hover:border-rubber hover:text-rubber lg:grid"
         >
-          {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+          {collapsed ? (
+            <ChevronRight className="h-4 w-4" />
+          ) : (
+            <ChevronLeft className="h-4 w-4" />
+          )}
         </button>
       </aside>
     </>
