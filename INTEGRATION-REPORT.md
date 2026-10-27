@@ -1,50 +1,35 @@
-# Integração multianual dos dados de 2023 a 2026
+# Revisão técnica — Bolsa Clara
 
-A aplicação Bolsa Clara foi atualizada para utilizar a base consolidada dos relatórios SICAF do Itinerário Formativo 2023 nos exercícios de 2023, 2024, 2025 e 2026.
+## Síntese da auditoria
 
-## Base integrada
+O dashboard não distinguia o ano da **Pactuação** do ano de **pagamento**. A dimensão anual usada nos filtros e gráficos vem de `Pagamento.dataPagamento`; portanto, aqueles anos descrevem exercícios financeiros, não camadas de pactuação. Todos os registros da base existente foram associados à Pactuação 2023, inclusive pagamentos de 2024, 2025 e 2026.
 
-A base contém 3.826 grupos beneficiário/processo e 6.203 pagamentos, totalizando R$ 3.479.800,00. Os lançamentos foram agrupados por CPF e processo SEI quando disponíveis. Quando o mesmo CPF possui processos distintos, os grupos são mantidos separados para preservar a granularidade documental.
+Também havia problemas de semântica e navegação: grupos com vários pagamentos eram rotulados como beneficiários duplicados; alguns textos de origem, período e página continuariam mostrando metadados da base original após uma importação; e o importador podia consolidar ocorrências sem processo SEI suficiente para identificar o vínculo com segurança. O validador de dados tentava interpretar a base TypeScript como JSON e não conseguia executá-la corretamente.
 
-| Exercício | Pagamentos | Total |
-|---|---:|---:|
-| 2023 | 399 | R$ 88.610,00 |
-| 2024 | 2.900 | R$ 1.221.082,00 |
-| 2025 | 2.551 | R$ 1.856.994,00 |
-| 2026 | 353 | R$ 313.114,00 |
-| **Consolidado** | **6.203** | **R$ 3.479.800,00** |
+## Alterações implementadas
 
-## Seleção de ano e visão consolidada
+- Criado `data/pactuacoes.ts` como mapa de camadas iniciais: Pactuação 2023 contém a base atual; 2024, 2025 e 2026 começam vazias.
+- Adicionado seletor global de Pactuação na barra superior, com estado “com dados”/“sem dados”, mensagens vazias próprias e navegação consistente entre dashboard, pesquisa e perfil.
+- Separado o campo `anoPagamento` do seletor de Pactuação. O filtro temporal, os rótulos e os gráficos agora identificam explicitamente o exercício financeiro.
+- A importação substitui apenas o conjunto da Pactuação selecionada e informa esse destino. Sem processo SEI, as ocorrências ficam separadas; a consolidação exige CPF, processo e curso compatíveis.
+- Renomeados os indicadores ambíguos: contagem e média passam a referir-se a grupos beneficiário–processo; “múltiplos pagamentos” substitui “beneficiários duplicados”. Pessoas sem identificador não são fundidas no gráfico por curso.
+- Criada uma rota de perfil genérica, compatível com registros importados. Os aliases usados nos links não expõem CPF ou nome em texto claro e não são mecanismos de controle de acesso. A geração de milhares de páginas individuais estáticas foi removida.
+- Atualizadas proveniência, documentação e avisos de privacidade. O validador agora lê a AST do TypeScript e não escreve nomes/CPFs nas mensagens do relatório.
 
-A visão padrão utiliza `ano = todos` e mostra o consolidado de 2023 a 2026. O filtro global de ano oferece as opções 2023, 2024, 2025 e 2026. Ao selecionar um ano, a aplicação recalcula os indicadores, os gráficos, os totais, a pesquisa e os perfis com base apenas nos pagamentos daquele exercício. O gráfico de recursos por ano permanece disponível para comparar os exercícios na visão consolidada.
+## Modelo de dados atual
 
-## Alterações técnicas
+O conjunto original tem **3.826 grupos**, **6.203 pagamentos** e valor total calculado de **R$ 3.479.800,00**. Os registros pertencem à Pactuação 2023; as datas dos pagamentos abrangem os exercícios financeiros de 2023 a 2026. A verificação encontrou quatro grupos com campos de identidade incompletos, mantidos separados em vez de presumidos como uma mesma pessoa.
 
-A base estática em `data/base.ts` foi substituída pelo consolidado multianual. As rotas de perfil continuam utilizando identificadores compostos por CPF ou nome, processo SEI e primeira nota de pagamento, evitando colisões entre registros com o mesmo CPF ou sem CPF. O dashboard passou a identificar dinamicamente o exercício selecionado ou o intervalo consolidado, e os textos globais foram atualizados para 2023–2026.
+As camadas importadas durante a sessão permanecem somente na memória do navegador e não sobrevivem a uma atualização da página. A configuração inicial dos próximos anos pode ser incorporada em `data/pactuacoes.ts` quando os dados oficiais estiverem disponíveis.
 
-A função de formatação de CPF exibe `Não informado` para registros sem CPF. O script `scripts/verify-data.mjs` valida as quantidades e os totais consolidados, além das contagens por exercício, da unicidade das notas de pagamento e dos identificadores de rota.
+## Validações executadas
 
-## Validação
+- `npm run check` — passou, sem erros TypeScript.
+- `npm run verify:data` — passou: 3.826 grupos, 6.203 pagamentos, total conciliado, 3.826 aliases únicos e nenhuma inconsistência; quatro avisos de identidade incompleta.
+- `npm run build` — passou; exportação estática gerou sete rotas principais, incluindo `/beneficiario`, sem pré-gerar um perfil por beneficiário.
 
-A validação multianual passou com 3.826 grupos, 6.203 pagamentos, R$ 3.479.800,00 de total calculado, 3.826 identificadores de rota únicos e 6.203 notas de pagamento únicas. Nenhuma duplicação exata foi removida. Foram preservados quatro registros com identidade incompleta porque nome e/ou CPF não aparecem nos relatórios de origem.
+## Limites e privacidade
 
-O build de produção foi concluído com 3.832 páginas estáticas. A revisão funcional confirmou a visão consolidada e as visões específicas de 2023, 2025 e 2026; a seleção de 2024 também permanece alimentada pelos dados auditados. Após retornar para `Todos`, o dashboard e a pesquisa voltaram ao total consolidado.
+A validação acima audita a base original em `data/base.ts`; não certifica arquivos que venham a ser importados depois. O parser SICAF depende da estrutura textual esperada e os resultados importados devem ser conferidos antes de apoiar decisões administrativas.
 
-A aplicação deve ser executada com:
-
-```bash
-yarn install
-yarn dev
-```
-
-Para validar a base:
-
-```bash
-node scripts/verify-data.mjs
-```
-
-Para gerar a exportação estática:
-
-```bash
-yarn build
-```
+O processamento no navegador não torna os dados privados: a base está embarcada no cliente, e uma exportação estática pode disponibilizar dados pessoais e financeiros aos visitantes. Não publique o site ou os arquivos em hospedagem pública sem autorização, autenticação e controle de acesso apropriados.

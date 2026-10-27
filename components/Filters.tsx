@@ -19,7 +19,7 @@ export function Filters() {
   const activeCount = useMemo(
     () =>
       [
-        filters.ano !== "todos",
+        filters.anoPagamento !== "todos",
         filters.curso !== "todos",
         filters.contaFinanceira !== "todos",
         filters.despesa !== "todos",
@@ -50,7 +50,7 @@ export function Filters() {
           <span className="mt-0.5 block text-[11px] text-ink/45">
             {active
               ? `${activeCount} ${activeCount === 1 ? "filtro activo" : "filtros activos"} · ${filteredRecords.length} beneficiários`
-              : `Todos os ${formatNumber(records.length)} registos do relatório`}
+              : `Todos os ${formatNumber(records.length)} grupos da pactuação`}
           </span>
         </span>
         {active && (
@@ -83,10 +83,10 @@ export function Filters() {
               </label>
 
               <FilterSelect
-                label="Ano"
-                value={filters.ano}
-                options={options.anos}
-                onChange={(value) => update("ano", value)}
+                label="Ano de pagamento"
+                value={filters.anoPagamento}
+                options={options.anosPagamento}
+                onChange={(value) => update("anoPagamento", value)}
               />
               <FilterSelect
                 label="Curso"

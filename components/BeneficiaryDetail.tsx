@@ -22,7 +22,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 export function BeneficiaryDetail({ slug }: { slug: string }) {
-  const { records } = useData();
+  const { records, selectedPactuacao } = useData();
   const beneficiary = findRecordBySlug(records, slug);
 
   if (!beneficiary) {
@@ -64,7 +64,7 @@ export function BeneficiaryDetail({ slug }: { slug: string }) {
             <div className="flex flex-wrap items-center gap-2">
               <span className="flex items-center gap-2 rounded-full bg-rubber/10 px-3 py-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-rubber">
                 <BadgeCheck className="h-3.5 w-3.5" />
-                Registo consolidado
+                Pactuação {selectedPactuacao}
               </span>
               <span className="rounded-full bg-ink/6 px-3 py-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.1em] text-ink/55">
                 {formatNumber(beneficiary.quantidadePagamentos)} {beneficiary.quantidadePagamentos === 1 ? "pagamento" : "pagamentos"}
@@ -113,7 +113,7 @@ export function BeneficiaryDetail({ slug }: { slug: string }) {
             <p className="eyebrow">Trilho financeiro</p>
             <h2 id="historico" className="mt-1 font-serif text-2xl font-bold text-ink">Histórico de pagamentos</h2>
             <p className="mt-1 text-[11px] leading-5 text-ink/46">
-              Todos os campos foram preservados conforme a estrutura do relatório de origem.
+              Campos do grupo preservados conforme a estrutura do relatório de origem.
             </p>
           </div>
           <span className="sm:ml-auto rounded-full bg-rubber/8 px-3 py-2 font-mono text-[9px] font-semibold uppercase tracking-[0.1em] text-rubber">

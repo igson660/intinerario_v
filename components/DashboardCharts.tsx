@@ -11,7 +11,7 @@ import {
   resourcesByCourse,
   resourcesByExpense,
   resourcesBySource,
-  resourcesByYear,
+  resourcesByPaymentYear,
   topBeneficiaries,
 } from "@/lib/charts";
 import { formatCompactCurrency, formatCurrency, formatNumber, shortLabel } from "@/lib/formatters";
@@ -95,7 +95,7 @@ export function DashboardCharts() {
   const { filteredRecords } = useData();
   const data = useMemo(
     () => ({
-      byYear: resourcesByYear(filteredRecords),
+      byYear: resourcesByPaymentYear(filteredRecords),
       byCourse: resourcesByCourse(filteredRecords),
       peopleByCourse: beneficiariesByCourse(filteredRecords),
       byAccount: resourcesByAccount(filteredRecords),
@@ -114,13 +114,13 @@ export function DashboardCharts() {
     <div className="grid min-w-0 gap-5 xl:grid-cols-12">
       <ChartCard
         eyebrow="Tempo"
-        title="Recursos por ano"
-        description="Valor total pago em cada exercício identificado na base seleccionada."
+        title="Recursos por ano de pagamento"
+        description="Valor total conforme a data de pagamento, sem alterar o ano da pactuação."
         className="xl:col-span-5"
-        action={<ChartBadge icon={<CalendarDays className="h-3.5 w-3.5" />}>Exercício</ChartBadge>}
+        action={<ChartBadge icon={<CalendarDays className="h-3.5 w-3.5" />}>Ano de pagamento</ChartBadge>}
       >
         {data.byYear.length === 1 ? (
-          <SingleDatumReport data={data.byYear} note="O relatório concentra 100% dos recursos neste exercício." />
+          <SingleDatumReport data={data.byYear} note="Todos os pagamentos desta vista ocorreram em um único ano de pagamento." />
         ) : (
           <div className="h-[290px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -158,8 +158,8 @@ export function DashboardCharts() {
 
       <ChartCard
         eyebrow="Alcance"
-        title="Beneficiários por curso"
-        description="Pessoas únicas associadas a cada curso na selecção actual."
+        title="Pessoas identificadas por curso"
+        description="Contagem aproximada por CPF ou nome informado na seleção atual."
         className="xl:col-span-7"
       >
         <div className="h-[315px]">
@@ -205,8 +205,8 @@ export function DashboardCharts() {
 
       <ChartCard
         eyebrow="Ranking"
-        title="Top 10 beneficiários"
-        description="Maiores valores acumulados por beneficiário dentro dos filtros."
+        title="Top 10 grupos beneficiário–processo"
+        description="Maiores valores acumulados em cada grupo dentro dos filtros."
         className="xl:col-span-7"
         action={<ChartBadge icon={<BadgeDollarSign className="h-3.5 w-3.5" />}>Valor total</ChartBadge>}
       >
@@ -248,8 +248,8 @@ export function DashboardCharts() {
 
       <ChartCard
         eyebrow="Frequência"
-        title="Quantidade de pagamentos por beneficiário"
-        description="Pessoas agrupadas pela frequência de recebimento na base filtrada."
+        title="Pagamentos por grupo beneficiário–processo"
+        description="Grupos agrupados pela frequência de lançamentos na base filtrada."
         className="xl:col-span-12"
       >
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-center">
@@ -374,7 +374,7 @@ function FrequencyReport({ item }: { item: AggregateDatum }) {
         <div>
           <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-rubber">Padrão uniforme</p>
           <p className="metric-number mt-3 text-6xl font-bold leading-none text-ink">{formatNumber(item.quantidade)}</p>
-          <p className="mt-2 font-serif text-xl font-bold text-ink">beneficiários no mesmo intervalo</p>
+          <p className="mt-2 font-serif text-xl font-bold text-ink">grupos no mesmo intervalo</p>
         </div>
         <div>
           <div className="flex items-center gap-2">
@@ -382,7 +382,7 @@ function FrequencyReport({ item }: { item: AggregateDatum }) {
             <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.1em] text-ink/48">{item.name}</span>
           </div>
           <p className="mt-3 max-w-md border-t border-line pt-3 text-[10px] leading-5 text-ink/48">
-            Não há recorrência na base actual: cada pessoa aparece numa única faixa de frequência.
+            A distribuição é calculada por grupo beneficiário–processo, não por pessoa única.
           </p>
         </div>
       </div>

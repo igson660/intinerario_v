@@ -1,4 +1,4 @@
-import { countDuplicateBeneficiaries } from "./duplicateChecker";
+import { countGroupsWithMultiplePayments } from "./duplicateChecker";
 import {
   beneficiariesByCourse,
   resourcesByAccount,
@@ -21,17 +21,17 @@ export function calculateStats(records: Beneficiario[]): DashboardStats {
   return {
     totalRecursos,
     totalPagamentos: payments.length,
-    totalBeneficiarios: records.length,
+    totalGruposBeneficiarioProcesso: records.length,
     beneficiariosUnicos: unique(records.map((record) => record.cpf || record.nome)),
     processosSei: unique(records.map((record) => record.processoSei)),
     cursos: unique(records.map((record) => record.curso)),
     contasFinanceiras: unique(payments.map((payment) => payment.contaFinanceira)),
     despesas: unique(payments.map((payment) => payment.despesa)),
     fontes: unique(payments.map((payment) => payment.fonte)),
-    anos: [...new Set(payments.map((payment) => Number(payment.dataPagamento.slice(-4))))].sort(),
+    anosPagamento: [...new Set(payments.map((payment) => Number(payment.dataPagamento.slice(-4))))].sort(),
     registrosImportados: payments.length,
-    beneficiariosDuplicados: countDuplicateBeneficiaries(records),
-    valorMedioPorBeneficiario: records.length ? totalRecursos / records.length : 0,
+    gruposComMultiplosPagamentos: countGroupsWithMultiplePayments(records),
+    valorMedioPorRegistro: records.length ? totalRecursos / records.length : 0,
     maiorPagamento: payments.length ? Math.max(...payments.map((payment) => payment.valor)) : 0,
     menorPagamento: payments.length ? Math.min(...payments.map((payment) => payment.valor)) : 0,
     cursoMaiorInvestimento: courseValues[0]?.name ?? "—",

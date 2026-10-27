@@ -2,6 +2,7 @@
 "use client";
 
 import { useData } from "@/contexts/DataContext";
+import { PactuacaoEmptyState } from "@/components/PactuacaoEmptyState";
 import { formatCpf, formatCurrency, formatNumber, normalizeText } from "@/lib/formatters";
 import { recordSlug } from "@/lib/recordIdentity";
 import type { Beneficiario } from "@/lib/types";
@@ -25,7 +26,7 @@ const PAGE_SIZE = 12;
 type SortKey = "nome" | "valor" | "pagamentos";
 
 export default function SearchPage() {
-  const { records } = useData();
+  const { records, selectedPactuacao } = useData();
   const [query, setQuery] = useState("");
   const [course, setCourse] = useState("todos");
   const [sort, setSort] = useState<SortKey>("nome");
@@ -55,6 +56,14 @@ export default function SearchPage() {
   }, [records, query, course, sort]);
 
   useEffect(() => setPage(1), [query, course, sort]);
+  useEffect(() => {
+    setPage(1);
+    setQuery("");
+    setCourse("todos");
+    setSort("nome");
+  }, [selectedPactuacao]);
+
+  if (!records.length) return <PactuacaoEmptyState />;
 
   const pageCount = Math.max(1, Math.ceil(results.length / PAGE_SIZE));
   const visible = results.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
@@ -75,7 +84,7 @@ export default function SearchPage() {
             Encontre um beneficiário pelo nome ou CPF.
           </h1>
           <p className="mt-3 max-w-2xl text-sm leading-7 text-ink/58">
-            Consulte o curso, o processo SEI e o histórico financeiro preservado para cada grupo nos relatórios de 2023 a 2026.
+            Consulte os registros da Pactuação {selectedPactuacao}. O ano de pagamento aparece no histórico e não altera a pactuação associada ao grupo.
           </p>
 
           <label className="relative mt-7 block max-w-2xl">
@@ -103,7 +112,7 @@ export default function SearchPage() {
       </section>
 
       <section className="mt-5 grid gap-4 sm:grid-cols-3">
-        <SearchMetric icon={<Users className="h-4 w-4" />} label="Beneficiários na base" value={formatNumber(records.length)} />
+        <SearchMetric icon={<Users className="h-4 w-4" />} label="Grupos beneficiário–processo" value={formatNumber(records.length)} />
         <SearchMetric icon={<FileSearch2 className="h-4 w-4" />} label="Resultados encontrados" value={formatNumber(results.length)} />
         <SearchMetric
           icon={<CircleDollarSign className="h-4 w-4" />}
@@ -116,7 +125,7 @@ export default function SearchPage() {
         <header className="flex flex-col gap-4 border-b border-line px-4 py-5 sm:px-6 xl:flex-row xl:items-end">
           <div>
             <p className="eyebrow">Directório</p>
-            <h2 className="mt-1 font-serif text-2xl font-bold text-ink">Beneficiários</h2>
+            <h2 className="mt-1 font-serif text-2xl font-bold text-ink">Grupos beneficiário–processo</h2>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row xl:ml-auto">
             <label className="space-y-1.5">
@@ -175,13 +184,13 @@ export default function SearchPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-line">
-                  {visible.map((record) => <DesktopRow key={recordSlug(record)} record={record} />)}
+                  {visible.map((record) => <DesktopRow key={recordSlug(record)} record={record} pactuacao={selectedPactuacao} />)}
                 </tbody>
               </table>
             </div>
 
             <div className="divide-y divide-line md:hidden">
-              {visible.map((record) => <MobileResult key={recordSlug(record)} record={record} />)}
+              {visible.map((record) => <MobileResult key={recordSlug(record)} record={record} pactuacao={selectedPactuacao} />)}
             </div>
 
             <footer className="flex flex-col gap-3 border-t border-line bg-canvas/35 px-4 py-4 sm:flex-row sm:items-center sm:px-6">
@@ -252,11 +261,15 @@ function SearchMetric({ icon, label, value }: { icon: React.ReactNode; label: st
   );
 }
 
-function DesktopRow({ record }: { record: Beneficiario }) {
+function beneficiaryHref(record: Beneficiario, pactuacao: number) {
+  return `/beneficiario?id=${encodeURIComponent(recordSlug(record))}&pactuacao=${pactuacao}`;
+}
+
+function DesktopRow({ record, pactuacao }: { record: Beneficiario; pactuacao: number }) {
   return (
     <tr className="group hover:bg-rubber/[0.035]">
       <td className="max-w-[270px] px-5 py-4">
-        <Link href={`/beneficiario/${recordSlug(record)}`} className="block truncate text-xs font-extrabold text-ink group-hover:text-rubber">
+        <Link href={beneficiaryHref(record, pactuacao)} className="block truncate text-xs font-extrabold text-ink group-hover:text-rubber">
           {record.nome}
         </Link>
       </td>
@@ -269,7 +282,7 @@ function DesktopRow({ record }: { record: Beneficiario }) {
       <td className="whitespace-nowrap px-5 py-4 font-mono text-[10px] font-semibold text-rubber">{formatCurrency(record.valorTotalRecebido)}</td>
       <td className="px-5 py-4 text-right">
         <Link
-          href={`/beneficiario/${recordSlug(record)}`}
+          href={beneficiaryHref(record, pactuacao)}
           className="inline-grid h-9 w-9 place-items-center rounded-xl border border-line bg-paper text-ink/45 group-hover:border-rubber group-hover:text-rubber"
           aria-label={`Ver detalhes de ${record.nome}`}
         >
@@ -280,9 +293,9 @@ function DesktopRow({ record }: { record: Beneficiario }) {
   );
 }
 
-function MobileResult({ record }: { record: Beneficiario }) {
+function MobileResult({ record, pactuacao }: { record: Beneficiario; pactuacao: number }) {
   return (
-    <Link href={`/beneficiario/${recordSlug(record)}`} className="block p-5 hover:bg-rubber/[0.035]">
+    <Link href={beneficiaryHref(record, pactuacao)} className="block p-5 hover:bg-rubber/[0.035]">
       <div className="flex items-start gap-3">
         <div className="min-w-0 flex-1">
           <h3 className="text-sm font-extrabold leading-5 text-ink">{record.nome}</h3>

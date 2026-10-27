@@ -42,6 +42,8 @@ export function Sidebar({
       <button
         type="button"
         aria-label="Fechar menu"
+        aria-hidden={!mobileOpen}
+        tabIndex={mobileOpen ? 0 : -1}
         onClick={onCloseMobile}
         className={`fixed inset-0 z-40 bg-ink/35 backdrop-blur-sm transition-opacity lg:hidden ${
           mobileOpen
@@ -51,9 +53,10 @@ export function Sidebar({
       />
 
       <aside
+        id="sidebar-navigation"
         aria-label="Navegação principal"
         className={`fixed inset-y-0 left-0 z-50 flex w-[272px] flex-col overflow-visible bg-[#102E3F] text-white shadow-float transition-[width,transform] duration-300 ease-snap ${compact} ${
-          mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+          mobileOpen ? "visible translate-x-0" : "invisible -translate-x-full lg:visible lg:translate-x-0"
         }`}
       >
         <div className="flex h-20 items-center gap-3 border-b border-white/10 px-5">
@@ -93,7 +96,9 @@ export function Sidebar({
             </p>
             {navItems.map(item => {
               const active =
-                pathname === item.href || pathname.startsWith(`${item.href}/`);
+                pathname === item.href
+                || pathname.startsWith(`${item.href}/`)
+                || (item.href === "/pesquisa" && pathname.startsWith("/beneficiario"));
               const Icon = item.icon;
               const link = (
                 <Link
@@ -147,6 +152,7 @@ export function Sidebar({
                 <button
                   type="button"
                   onClick={onOpenImport}
+                  aria-label="Importar base"
                   className="flex h-12 w-full items-center gap-3 rounded-xl px-3 text-sm font-semibold text-white/68 hover:bg-white/8 hover:text-white"
                 >
                   <FileInput className="h-5 w-5 shrink-0" />
@@ -180,13 +186,13 @@ export function Sidebar({
               <span
                 className={`font-mono text-[9px] uppercase tracking-[0.12em] text-white/55 ${collapsed ? "lg:hidden" : ""}`}
               >
-                Processamento local
+              Dados tratados no navegador
               </span>
             </div>
             <p
               className={`mt-2 text-[11px] leading-5 text-white/42 ${collapsed ? "lg:hidden" : ""}`}
             >
-              Nenhum dado é enviado para servidores externos.
+              Evite publicar a exportação estática com dados identificáveis.
             </p>
           </div>
         </div>

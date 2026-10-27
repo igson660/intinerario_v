@@ -1,5 +1,6 @@
 {
   "status": "passou",
+  "anoPactuacao": 2023,
   "grupos": 3826,
   "pagamentos": 6203,
   "cpfsUnicosComValor": 2572,
@@ -9,7 +10,7 @@
   "totalMetadados": 3479800,
   "quantidadeMetadados": 6203,
   "paginas": 1133,
-  "porAno": {
+  "porAnoPagamento": {
     "2023": {
       "count": 399,
       "total": 88610
@@ -27,15 +28,15 @@
       "total": 313114
     }
   },
-  "cursosDistintos": 709,
+  "cursosDistintos": 321,
   "identidadesIncompletas": 4,
   "menorPagamento": 6,
   "maiorPagamento": 2898,
   "issues": [],
   "warnings": [
-    "Identidade incompleta: nome ausente / CPF ausente.",
-    "Identidade incompleta: nome ausente / CPF ausente.",
-    "Identidade incompleta: nome ausente / CPF ausente.",
-    "Identidade incompleta: nome ausente / CPF ausente."
+    "Grupo 3823 possui campos de identidade incompletos.",
+    "Grupo 3824 possui campos de identidade incompletos.",
+    "Grupo 3825 possui campos de identidade incompletos.",
+    "Grupo 3826 possui campos de identidade incompletos."
   ]
 }

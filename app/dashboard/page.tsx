@@ -5,6 +5,7 @@ import { DashboardCharts } from "@/components/DashboardCharts";
 import { Filters } from "@/components/Filters";
 import { InfoCard } from "@/components/InfoCard";
 import { KpiCard } from "@/components/KpiCard";
+import { PactuacaoEmptyState } from "@/components/PactuacaoEmptyState";
 import { useData } from "@/contexts/DataContext";
 import { baseMetadata } from "@/data/base";
 import { formatCurrency, formatNumber } from "@/lib/formatters";
@@ -29,10 +30,14 @@ import {
 } from "lucide-react";
 
 export default function DashboardPage() {
-  const { stats, records, filteredRecords, sourceLabel, filters } = useData();
+  const { stats, records, filteredRecords, sourceLabel, filters, selectedPactuacao, isOfficialBase } = useData();
+  if (!records.length) return <PactuacaoEmptyState />;
+
   const isFiltered = filteredRecords.length !== records.length;
-  const totalMatches = Math.abs(stats.totalRecursos - baseMetadata.totalRelatorio) < 0.001 && !isFiltered;
-  const yearLabel = filters.ano === "todos" ? `Exercícios ${baseMetadata.anos[0]}–${baseMetadata.anos[baseMetadata.anos.length - 1]}` : `Exercício ${filters.ano}`;
+  const totalMatches = isOfficialBase && Math.abs(stats.totalRecursos - baseMetadata.totalRelatorio) < 0.001 && !isFiltered;
+  const yearLabel = filters.anoPagamento === "todos"
+    ? stats.anosPagamento.length ? `Anos de pagamento ${stats.anosPagamento.join(", ")}` : "Sem pagamentos nesta vista"
+    : `Pagamento em ${filters.anoPagamento}`;
 
   const kpis = [
     {
@@ -43,16 +48,16 @@ export default function DashboardPage() {
       tone: "ink" as const,
     },
     {
-      label: "Beneficiários",
-      value: formatNumber(stats.totalBeneficiarios),
-      note: "Registos com pagamentos na selecção",
+      label: "Grupos beneficiário–processo",
+      value: formatNumber(stats.totalGruposBeneficiarioProcesso),
+      note: "Vínculos com pagamentos na pactuação selecionada",
       icon: Users,
       tone: "rubber" as const,
     },
     {
-      label: "Beneficiários únicos",
+      label: "Pessoas identificadas",
       value: formatNumber(stats.beneficiariosUnicos),
-      note: "Consolidação por CPF ou nome",
+      note: "CPF ou nome quando disponível; não é um cadastro mestre",
       icon: UserCheck,
       tone: "sage" as const,
     },
@@ -92,25 +97,25 @@ export default function DashboardPage() {
       tone: "sage" as const,
     },
     {
-      label: "Anos presentes",
-      value: stats.anos.length ? stats.anos.join(", ") : "—",
-      note: "Exercícios detectados pelas datas",
+      label: "Anos de pagamento",
+      value: stats.anosPagamento.length ? stats.anosPagamento.join(", ") : "—",
+      note: "Exercícios financeiros detectados pelas datas",
       icon: CalendarRange,
       tone: "ink" as const,
     },
     {
-      label: "Registos importados",
+      label: "Pagamentos na vista",
       value: formatNumber(stats.registrosImportados),
       note: "Linhas de pagamento activas",
       icon: Database,
       tone: "rubber" as const,
     },
     {
-      label: "Beneficiários duplicados",
-      value: formatNumber(stats.beneficiariosDuplicados),
-      note: "Pessoas com mais de um pagamento",
+      label: "Grupos com múltiplos pagamentos",
+      value: formatNumber(stats.gruposComMultiplosPagamentos),
+      note: "Registros com mais de um lançamento",
       icon: Fingerprint,
-      tone: stats.beneficiariosDuplicados ? ("clay" as const) : ("sage" as const),
+      tone: stats.gruposComMultiplosPagamentos ? ("clay" as const) : ("sage" as const),
     },
   ];
 
@@ -125,7 +130,7 @@ export default function DashboardPage() {
           <div>
             <div className="flex flex-wrap items-center gap-2">
               <span className="rounded-full bg-rubber/10 px-3 py-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-rubber">
-                SICAF · {yearLabel}
+                PACTUAÇÃO {selectedPactuacao} · {yearLabel}
               </span>
               <span className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.1em] ${
                 totalMatches ? "bg-[#DCEBE4] text-rubber-dark" : "bg-clay/10 text-clay"
@@ -147,7 +152,7 @@ export default function DashboardPage() {
               </p>
             </div>
             <div className="mb-1 max-w-[270px] border-l border-line pl-4 text-[11px] leading-5 text-ink/52">
-              {formatNumber(stats.totalPagamentos)} pagamentos para {formatNumber(stats.totalBeneficiarios)} beneficiários na vista actual.
+              {formatNumber(stats.totalPagamentos)} pagamentos em {formatNumber(stats.totalGruposBeneficiarioProcesso)} grupos beneficiário–processo na vista atual.
               <span className="mt-1 block truncate font-mono text-[9px] uppercase tracking-[0.08em] text-ink/38" title={sourceLabel}>
                 Fonte: {sourceLabel}
               </span>
@@ -215,19 +220,19 @@ export default function DashboardPage() {
                 Do relatório extenso a uma leitura verificável.
               </h2>
               <p className="mt-4 max-w-md text-sm leading-7 text-ink/58">
-                A visão padrão reúne os exercícios de 2023 a 2026; use o filtro de ano para analisar um exercício específico. Os dados são consolidados por CPF e processo SEI quando disponíveis.
+                Esta vista contém somente a Pactuação {selectedPactuacao}. O filtro por ano de pagamento analisa os exercícios financeiros sem alterar a pactuação; o conjunto original está associado à Pactuação 2023.
               </p>
             </div>
             <div className="mt-8 grid max-w-md grid-cols-2 gap-3">
               <div className="rounded-xl border border-line bg-paper/85 p-4 backdrop-blur-sm">
                 <BookOpenCheck className="h-5 w-5 text-rubber" />
                 <p className="mt-3 font-mono text-[9px] uppercase tracking-[0.12em] text-ink/45">Páginas de origem</p>
-                <p className="metric-number mt-1 text-2xl font-bold text-ink">{baseMetadata.paginas}</p>
+                <p className="metric-number mt-1 text-2xl font-bold text-ink">{isOfficialBase ? baseMetadata.paginas : "—"}</p>
               </div>
               <div className="rounded-xl border border-line bg-paper/85 p-4 backdrop-blur-sm">
                 <FileCheck2 className="h-5 w-5 text-clay" />
                 <p className="mt-3 font-mono text-[9px] uppercase tracking-[0.12em] text-ink/45">Data de geração</p>
-                <p className="metric-number mt-1 text-2xl font-bold text-ink">{baseMetadata.dataGeracao.replaceAll("/", ".")}</p>
+                <p className="metric-number mt-1 text-2xl font-bold text-ink">{isOfficialBase ? baseMetadata.dataGeracao.replaceAll("/", ".") : "Importada"}</p>
               </div>
             </div>
           </div>
@@ -237,7 +242,7 @@ export default function DashboardPage() {
           title="Métricas rápidas"
           intro="Destaques calculados a partir da vista corrente para orientar a exploração."
           items={[
-            { label: "Valor médio por beneficiário", value: formatCurrency(stats.valorMedioPorBeneficiario), icon: <CircleDollarSign className="h-4 w-4" /> },
+            { label: "Valor médio por grupo beneficiário–processo", value: formatCurrency(stats.valorMedioPorRegistro), icon: <CircleDollarSign className="h-4 w-4" /> },
             { label: "Maior pagamento individual", value: formatCurrency(stats.maiorPagamento), icon: <Banknote className="h-4 w-4" /> },
             { label: "Menor pagamento individual", value: formatCurrency(stats.menorPagamento), icon: <Banknote className="h-4 w-4" /> },
             { label: "Curso com maior investimento", value: stats.cursoMaiorInvestimento, icon: <GraduationCap className="h-4 w-4" /> },
@@ -261,7 +266,7 @@ export default function DashboardPage() {
 
       <footer className="mt-10 flex flex-col gap-3 border-t border-line py-6 text-[10px] leading-5 text-ink/42 sm:flex-row sm:items-center sm:justify-between">
         <p>
-          Fonte: {baseMetadata.fonte}. Período {baseMetadata.periodo}.
+          Fonte: {sourceLabel}. Pactuação {selectedPactuacao}; anos de pagamento {stats.anosPagamento.join(", ") || "não identificados"}.
         </p>
         <p className="font-mono uppercase tracking-[0.08em]">
           Processamento local · Dados sujeitos à conferência documental

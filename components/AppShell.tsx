@@ -15,6 +15,15 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   useEffect(() => setMobileOpen(false), [pathname]);
 
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMobileOpen(false);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [mobileOpen]);
+
   return (
     <div className="min-h-screen">
       <Sidebar
@@ -29,7 +38,11 @@ export function AppShell({ children }: { children: ReactNode }) {
           collapsed ? "lg:pl-[88px]" : "lg:pl-[272px]"
         }`}
       >
-        <Navbar onOpenMenu={() => setMobileOpen(true)} onOpenImport={() => setImportOpen(true)} />
+        <Navbar
+          mobileMenuOpen={mobileOpen}
+          onOpenMenu={() => setMobileOpen(true)}
+          onOpenImport={() => setImportOpen(true)}
+        />
         {children}
       </div>
       <ImportDataDialog open={importOpen} onOpenChange={setImportOpen} />

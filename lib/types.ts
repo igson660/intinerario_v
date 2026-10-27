@@ -1,3 +1,6 @@
+export const PACTUACAO_ANOS = [2023, 2024, 2025, 2026] as const;
+export type PactuacaoAno = (typeof PACTUACAO_ANOS)[number];
+
 export interface Pagamento {
   dataPagamento: string;
   notaPagamento: string;
@@ -20,7 +23,7 @@ export interface Beneficiario {
 }
 
 export interface FilterState {
-  ano: string;
+  anoPagamento: string;
   curso: string;
   contaFinanceira: string;
   despesa: string;
@@ -39,17 +42,17 @@ export interface AggregateDatum {
 export interface DashboardStats {
   totalRecursos: number;
   totalPagamentos: number;
-  totalBeneficiarios: number;
+  totalGruposBeneficiarioProcesso: number;
   beneficiariosUnicos: number;
   processosSei: number;
   cursos: number;
   contasFinanceiras: number;
   despesas: number;
   fontes: number;
-  anos: number[];
+  anosPagamento: number[];
   registrosImportados: number;
-  beneficiariosDuplicados: number;
-  valorMedioPorBeneficiario: number;
+  gruposComMultiplosPagamentos: number;
+  valorMedioPorRegistro: number;
   maiorPagamento: number;
   menorPagamento: number;
   cursoMaiorInvestimento: string;
@@ -60,7 +63,7 @@ export interface DashboardStats {
 }
 
 export interface FilterOptions {
-  anos: string[];
+  anosPagamento: string[];
   cursos: string[];
   contasFinanceiras: string[];
   despesas: string[];

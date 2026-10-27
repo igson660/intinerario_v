@@ -1,12 +1,13 @@
 # Bolsa Clara — Dashboard BI de Assistência Estudantil
 
-Aplicação web interactiva para análise de pagamentos de bolsas de assistência estudantil, construída com **Next.js 15**, **TypeScript**, **React 19** e **Tailwind CSS 4**.
+Aplicação web interativa para análise de pagamentos de bolsas de assistência estudantil, construída com **Next.js 15**, **TypeScript**, **React 19** e **Tailwind CSS 3**.
 
 ## 📋 Características
 
 - **Dashboard BI**: 9 gráficos interactivos com Recharts
-- **Pesquisa Avançada**: Filtros globais (beneficiário, ano, curso, conta, despesa, fonte, faixa de valor)
-- **Perfis Individuais**: 3.826 páginas de grupos beneficiário/processo com histórico completo de pagamentos
+- **Camada de Pactuação**: seleção independente para 2023, 2024, 2025 e 2026
+- **Pesquisa Avançada**: filtros de beneficiário, ano de pagamento, curso, conta, despesa, fonte e faixa de valor
+- **Perfis Individuais**: consulta de grupos beneficiário–processo e histórico completo de pagamentos
 - **Importação de Dados**: Suporte a texto SICAF com parsing local no navegador
 - **Exportação Estática**: páginas HTML pré-renderizadas para hospedagem simples
 - **Responsivo**: Design adaptado para desktop, tablet e mobile
@@ -52,8 +53,8 @@ bolsa-estudantil-dashboard/
 │   ├── layout.tsx           # Layout raiz
 │   ├── globals.css          # Estilos globais
 │   ├── dashboard/page.tsx   # Dashboard BI
-│   ├── pesquisa/page.tsx    # Pesquisa de beneficiários
-│   └── beneficiario/[cpf]/page.tsx  # Perfil individual
+│   ├── pesquisa/page.tsx    # Pesquisa de grupos
+│   └── beneficiario/page.tsx # Perfil por query string, inclusive após importação
 ├── components/              # Componentes React reutilizáveis
 │   ├── Sidebar.tsx          # Navegação lateral
 │   ├── Navbar.tsx           # Barra superior
@@ -67,11 +68,13 @@ bolsa-estudantil-dashboard/
 │   ├── types.ts             # Tipos TypeScript
 │   ├── parser.ts            # Parser de texto SICAF
 │   ├── filters.ts           # Lógica de filtros
+│   ├── pactuacoes.ts        # Validação de anos de pactuação
 │   ├── charts.ts            # Agregações para gráficos
 │   ├── formatters.ts        # Formatadores (moeda, data)
 │   └── ...
-├── data/                    # Base de dados estática
-│   └── base.ts              # 3.826 grupos beneficiário/processo (SICAF 2023–2026)
+├── data/                    # Bases organizadas por camada
+│   ├── base.ts              # 3.826 grupos da Pactuação 2023 (pagamentos dos exercícios 2023–2026)
+│   └── pactuacoes.ts        # Mapa dos conjuntos disponíveis por ano de pactuação
 ├── scripts/                 # Scripts utilitários
 │   └── verify-data.mjs      # Validação de integridade
 ├── package.json             # Dependências e scripts
@@ -85,7 +88,9 @@ bolsa-estudantil-dashboard/
 
 ### Variáveis de Ambiente
 
-Nenhuma variável de ambiente é necessária para a aplicação funcionar localmente. Todos os dados são processados no navegador.
+Nenhuma variável de ambiente é necessária para a aplicação funcionar localmente. Os dados são processados no navegador e as importações substituem apenas a pactuação selecionada durante a sessão atual.
+
+> **Privacidade:** o processamento no navegador não torna os dados privados. A base-fonte contém dados pessoais e financeiros, e uma exportação estática disponibiliza aos visitantes os arquivos e dados incluídos no pacote. Não publique o dashboard em hospedagem pública sem autorização e sem uma camada adequada de autenticação e controle de acesso.
 
 ### Customização
 
@@ -106,20 +111,22 @@ Nenhuma variável de ambiente é necessária para a aplicação funcionar localm
 
 ## 📊 Dados
 
-A aplicação inclui a base consolidada dos **Relatórios SICAF do Itinerário Formativo 2023 — exercícios 2023 a 2026** com:
+O dashboard separa **ano da Pactuação** de **ano de pagamento**. Todos os dados que já existiam foram associados à **Pactuação 2023**; eles incluem pagamentos nos exercícios financeiros de 2023 a 2026. As Pactuações 2024, 2025 e 2026 estão criadas, mas começam sem dados.
+
+A base atual contém os **Relatórios SICAF do Itinerário Formativo 2023** com:
 - **3.826 grupos beneficiário/processo**
 - **6.203 pagamentos**
 - **Total**: R$ 3.479.800,00
 - **Período**: 26/12/2023 a 20/07/2026
-- **1.133 páginas de origem**: 86 de 2023, 556 de 2024, 424 de 2025 e 67 de 2026
+- **1.133 páginas de origem**: relatórios por ano de pagamento, não por ano de Pactuação
 
-A visão padrão do dashboard mostra todos os exercícios. O filtro global de ano permite selecionar 2023, 2024, 2025 ou 2026, recalculando indicadores, gráficos e resultados da pesquisa.
+O seletor **Pactuação** na barra superior troca o conjunto de dados inteiro. O filtro **Ano de pagamento** dentro do dashboard filtra as datas dos pagamentos da pactuação ativa; não muda nem infere o ano da pactuação. Por exemplo, pagamentos de 2025 podem pertencer à Pactuação 2023.
 
 ### Validação de Dados
 
 ```bash
 # Executar validação de integridade
-node scripts/verify-data.mjs
+yarn verify:data
 ```
 
 Resultado esperado:
@@ -178,7 +185,7 @@ Resultado esperado:
 - **Next.js 15**: Framework React com App Router
 - **React 19**: Biblioteca UI
 - **TypeScript 5.6**: Tipagem estática
-- **Tailwind CSS 4**: Utilitários CSS
+- **Tailwind CSS 3.4**: Utilitários CSS
 - **Recharts 2.15**: Gráficos interactivos
 - **Radix UI**: Componentes acessíveis
 - **Lucide React**: Ícones
@@ -213,7 +220,7 @@ yarn build
 yarn check
 
 # Verificação de dados
-node scripts/verify-data.mjs
+yarn verify:data
 ```
 
 ## 📝 Licença
@@ -228,4 +235,4 @@ Para questões ou sugestões, contacte o desenvolvedor.
 
 **Versão**: 1.0.0  
 **Data de Geração**: 20/07/2026  
-**Fonte de Dados**: SICAF — Relação de Pagamentos por Credor e Data de Baixa (1.133 páginas, exercícios 2023–2026)
+**Fonte de Dados**: SICAF — Relação de Pagamentos por Credor e Data de Baixa (1.133 páginas; Pactuação 2023, pagamentos nos exercícios 2023–2026)

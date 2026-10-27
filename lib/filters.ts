@@ -2,7 +2,7 @@ import type { Beneficiario, FilterOptions, FilterState } from "./types";
 import { normalizeText } from "./formatters";
 
 export const defaultFilters: FilterState = {
-  ano: "todos",
+  anoPagamento: "todos",
   curso: "todos",
   contaFinanceira: "todos",
   despesa: "todos",
@@ -18,7 +18,7 @@ export function buildFilterOptions(records: Beneficiario[]): FilterOptions {
   const unique = (values: string[]) => [...new Set(values.filter(Boolean))].sort();
 
   return {
-    anos: unique(payments.map((payment) => payment.dataPagamento.slice(-4))),
+    anosPagamento: unique(payments.map((payment) => payment.dataPagamento.slice(-4))),
     cursos: unique(records.map((record) => record.curso)),
     contasFinanceiras: unique(payments.map((payment) => payment.contaFinanceira)),
     despesas: unique(payments.map((payment) => payment.despesa)),
@@ -41,7 +41,7 @@ export function applyFilters(records: Beneficiario[], filters: FilterState): Ben
     )
     .map((record) => {
       const pagamentos = record.pagamentos.filter((payment) => {
-        const yearMatches = filters.ano === "todos" || payment.dataPagamento.endsWith(filters.ano);
+        const yearMatches = filters.anoPagamento === "todos" || payment.dataPagamento.endsWith(filters.anoPagamento);
         const accountMatches =
           filters.contaFinanceira === "todos"
           || payment.contaFinanceira === filters.contaFinanceira;

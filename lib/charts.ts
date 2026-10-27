@@ -1,4 +1,5 @@
 import type { AggregateDatum, Beneficiario, Pagamento } from "./types";
+import { normalizeText } from "./formatters";
 
 function aggregate(
   records: Beneficiario[],
@@ -17,7 +18,7 @@ function aggregate(
   return [...result.values()];
 }
 
-export const resourcesByYear = (records: Beneficiario[]) =>
+export const resourcesByPaymentYear = (records: Beneficiario[]) =>
   aggregate(records, (_, payment) => payment.dataPagamento.slice(-4)).sort((a, b) =>
     a.name.localeCompare(b.name),
   );
@@ -28,8 +29,10 @@ export const resourcesByCourse = (records: Beneficiario[]) =>
 export const beneficiariesByCourse = (records: Beneficiario[]) => {
   const result = new Map<string, Set<string>>();
   records.forEach((beneficiary) => {
+    const personKey = beneficiary.cpf.replace(/\D/g, "") || normalizeText(beneficiary.nome);
+    if (!personKey) return;
     const set = result.get(beneficiary.curso) ?? new Set<string>();
-    set.add(beneficiary.cpf || beneficiary.nome);
+    set.add(personKey);
     result.set(beneficiary.curso, set);
   });
   return [...result.entries()]

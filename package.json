@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "serve out -l ${PORT:-3000}",
     "check": "tsc --noEmit",
+    "verify:data": "node scripts/verify-data.mjs",
     "format": "prettier --write ."
   },
   "dependencies": {

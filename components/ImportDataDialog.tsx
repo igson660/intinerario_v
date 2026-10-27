@@ -19,7 +19,7 @@ interface ImportDataDialogProps {
 }
 
 export function ImportDataDialog({ open, onOpenChange }: ImportDataDialogProps) {
-  const { importText, restoreOriginal } = useData();
+  const { importText, restoreOriginal, selectedPactuacao } = useData();
   const [raw, setRaw] = useState("");
   const [fileName, setFileName] = useState("");
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
@@ -39,7 +39,7 @@ export function ImportDataDialog({ open, onOpenChange }: ImportDataDialogProps) 
   const submit = () => {
     try {
       const count = importText(raw, fileName || "Texto colado manualmente");
-      setMessage({ type: "success", text: `${count} beneficiários foram reconhecidos e agrupados.` });
+      setMessage({ type: "success", text: `${count} grupos foram reconhecidos e associados à Pactuação ${selectedPactuacao}.` });
     } catch (error) {
       setMessage({
         type: "error",
@@ -62,7 +62,7 @@ export function ImportDataDialog({ open, onOpenChange }: ImportDataDialogProps) 
               </Dialog.Title>
               <Dialog.Description className="mt-2 text-sm leading-6 text-ink/60">
                 Use o texto extraído de um relatório com a mesma estrutura SICAF. A base actual será
-                substituída apenas nesta sessão.
+                substituída apenas nesta sessão e somente na pactuação seleccionada.
               </Dialog.Description>
             </div>
             <Dialog.Close className="absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full bg-paper/80 text-ink/55 backdrop-blur hover:text-ink">
@@ -72,6 +72,9 @@ export function ImportDataDialog({ open, onOpenChange }: ImportDataDialogProps) 
           </div>
 
           <div className="space-y-5 p-6 sm:p-8">
+            <div className="rounded-xl border border-rubber/20 bg-rubber/[0.05] px-4 py-3 text-xs leading-5 text-ink/65">
+              Destino: <strong>Pactuação {selectedPactuacao}</strong>. O ano da data de pagamento é um exercício financeiro separado e não altera este destino. Sem processo SEI confiável, registros são mantidos separados para evitar fusões indevidas.
+            </div>
             <button
               type="button"
               onClick={() => fileRef.current?.click()}
@@ -143,7 +146,7 @@ export function ImportDataDialog({ open, onOpenChange }: ImportDataDialogProps) 
                   restoreOriginal();
                   setRaw("");
                   setFileName("");
-                  setMessage({ type: "success", text: "A base original de 2023 a 2026 foi restaurada." });
+                  setMessage({ type: "success", text: "Base original restaurada na Pactuação 2023; Pactuações 2024–2026 sem dados." });
                 }}
                 className="flex h-11 items-center justify-center gap-2 rounded-xl border border-line px-4 text-xs font-bold text-ink hover:border-clay hover:text-clay sm:mr-auto"
               >
